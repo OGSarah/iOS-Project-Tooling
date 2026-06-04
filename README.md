@@ -1,4 +1,4 @@
-# Scripts and Swift Lint files
+# Scripts, SwiftLint, and other universal files
 Various Useful Scripts
 
 - ### For adding the SarahUniverse copyright to existing files in an Xcode project:
