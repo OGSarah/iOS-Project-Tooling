@@ -1,0 +1,502 @@
+# =============================================================================
+# .swiftlint.yml
+# Production SwiftLint configuration for a large multi-module iOS codebase.
+#
+# Philosophy:
+#   - Strict on correctness rules that catch real bugs.
+#   - Pragmatic on stylistic rules that generate noise at scale.
+#   - Heavy use of opt-in rules (SwiftLint disables most of these by default).
+#   - Generated, vendored, and snapshot code is excluded.
+#   - Tune thresholds so the linter is green on legacy code as `warning`,
+#     and only blocks CI on the things that truly matter (`error`).
+#
+# Requires SwiftLint >= 0.54. Run `swiftlint analyze` for analyzer_rules.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Paths
+# -----------------------------------------------------------------------------
+included:
+  - Sources
+  - Modules
+  - App
+  - Tests
+
+excluded:
+  - .build
+  - .swiftpm
+  - Pods
+  - Carthage
+  - vendor
+  - DerivedData
+  - fastlane
+  - "**/Generated"
+  - "**/*+Generated.swift"
+  - "**/*.generated.swift"          # Sourcery / SwiftGen / protobuf output
+  - "**/R.generated.swift"
+  - "**/*.pb.swift"                 # SwiftProtobuf
+  - "**/__Snapshots__"              # swift-snapshot-testing
+  - "**/Mocks/Generated"
+
+# -----------------------------------------------------------------------------
+# Rules turned OFF (default rules we deliberately don't enforce)
+# -----------------------------------------------------------------------------
+disabled_rules:
+  - todo                            # We track TODO/FIXME via tickets, not the linter.
+
+# -----------------------------------------------------------------------------
+# Opt-in rules (NOT enabled by SwiftLint by default — this is where most of
+# the value is). Curated for safety, modern Swift, and consistency.
+# -----------------------------------------------------------------------------
+opt_in_rules:
+  # Accessibility
+  - accessibility_label_for_image
+  - accessibility_trait_for_button
+
+  # Correctness / safety
+  - array_init
+  - balanced_xctest_lifecycle
+  - discarded_notification_center_observer
+  - discouraged_assert
+  - discouraged_optional_boolean
+  - discouraged_optional_collection
+  - empty_count
+  - empty_string
+  - empty_collection_literal
+  - fallthrough
+  - fatal_error_message
+  - flatmap_over_map_reduce
+  - force_unwrapping
+  - implicitly_unwrapped_optional
+  - legacy_multiple
+  - nslocalizedstring_key
+  - nslocalizedstring_require_bundle
+  - overridden_super_call
+  - override_in_extension
+  - prefer_zero_over_explicit_init
+  - prohibited_super_call
+  - raw_value_for_camel_cased_codable_enum
+  - return_value_from_void_function
+  - self_binding
+  - unavailable_function
+  - unowned_variable_capture
+  - weak_delegate
+  - xct_specific_matcher
+
+  # Idiomatic / modern Swift
+  - closure_end_indentation
+  - closure_spacing
+  - collection_alignment
+  - comma_inheritance
+  - contains_over_filter_count
+  - contains_over_filter_is_empty
+  - contains_over_first_not_nil
+  - contains_over_range_nil_comparison
+  - convenience_type
+  - empty_xctest_method
+  - explicit_init
+  - first_where
+  - for_where
+  - identical_operands
+  - joined_default_parameter
+  - last_where
+  - legacy_random
+  - literal_expression_end_indentation
+  - lower_acl_than_parent
+  - modifier_order
+  - multiline_arguments
+  - multiline_function_chains
+  - multiline_literal_brackets
+  - multiline_parameters
+  - operator_usage_whitespace
+  - optional_enum_case_matching
+  - prefer_self_in_static_references
+  - prefer_self_type_over_type_of_self
+  - reduce_into
+  - redundant_nil_coalescing
+  - redundant_type_annotation
+  - shorthand_optional_binding
+  - sorted_first_last
+  - sorted_imports
+  - toggle_bool
+  - unneeded_parentheses_in_closure_argument
+  - vertical_parameter_alignment_on_call
+  - vertical_whitespace_closing_braces
+  - vertical_whitespace_opening_braces
+  - yoda_condition
+
+  # Documentation / hygiene
+  - empty_parameters
+  - file_header
+  - private_swiftui_state
+
+# -----------------------------------------------------------------------------
+# Analyzer rules (only run via `swiftlint analyze --compiler-log-path ...`)
+# -----------------------------------------------------------------------------
+analyzer_rules:
+  - capture_variable
+  - explicit_self
+  - typesafe_array_init
+  - unused_declaration
+  - unused_import
+
+# -----------------------------------------------------------------------------
+# Rule configuration
+# -----------------------------------------------------------------------------
+
+# Sizes — warn early, only error on the truly egregious so legacy stays green.
+line_length:
+  warning: 120
+  error: 200
+  ignores_urls: true
+  ignores_function_declarations: true
+  ignores_comments: true
+
+file_length:
+  warning: 500
+  error: 1000
+  ignore_comment_only_lines: true
+
+type_body_length:
+  warning: 350
+  error: 500
+
+function_body_length:
+  warning: 60
+  error: 120
+
+function_parameter_count:
+  warning: 6
+  error: 8
+
+cyclomatic_complexity:
+  warning: 12
+  error: 20
+  ignores_case_statements: true
+
+nesting:
+  type_level:
+    warning: 2
+  function_level:
+    warning: 3
+
+large_tuple:
+  warning: 3
+  error: 4
+
+# Naming
+type_name:
+  min_length:
+    warning: 3
+    error: 2
+  max_length:
+    warning: 45
+    error: 60
+  allowed_symbols: ["_"]
+  validates_start_with_lowercase: error
+
+identifier_name:
+  min_length:
+    warning: 2
+    error: 1
+  max_length:
+    warning: 45
+    error: 60
+  # Common acceptable short names — IDs, coordinates, throwaway closure args.
+  excluded:
+    - id
+    - x
+    - y
+    - z
+    - dx
+    - dy
+    - to
+    - vc
+    - db
+    - ui
+    - URL
+    - url
+
+# Force-* rules: warnings in app code keeps CI green on legacy, but production
+# code review should treat these as blocking. (Set to `error` once cleaned up.)
+force_cast:
+  severity: warning
+force_try:
+  severity: warning
+force_unwrapping:
+  severity: warning
+
+implicitly_unwrapped_optional:
+  mode: all
+  severity: warning
+
+# Trailing comma — prefer them on multiline collections (cleaner diffs).
+trailing_comma:
+  mandatory_comma: true
+
+# Modifier ordering (keeps access control / static / final consistent).
+modifier_order:
+  preferred_modifier_order:
+    - override
+    - acl
+    - setterACL
+    - dynamic
+    - mutators
+    - lazy
+    - final
+    - required
+    - convenience
+    - typeMethods
+    - owned
+
+# Multiline argument / parameter style
+multiline_arguments:
+  first_argument_location: next_line
+  only_enforce_after_first_closure_on_first_line: true
+
+# File header template — enforce a consistent copyright/license banner.
+file_header:
+  required_pattern: |
+                    \/\/
+                    \/\/ .*?\.swift
+                    \/\/ .*?
+                    \/\/
+                    \/\/ Copyright © \d{4} SarahUniverse\. All rights reserved\.
+                    \/\/
+
+# -----------------------------------------------------------------------------
+# Custom rules — org-specific conventions the built-ins don't cover.
+# -----------------------------------------------------------------------------
+custom_rules:
+  no_direct_standard_out:
+    name: "Direct stdout"
+    regex: '\b(print|debugPrint|dump)\s*\('
+    message: "Use the structured Logger instead of print/debugPrint/dump."
+    severity: warning
+    match_kinds:
+      - identifier
+
+  comment_space:
+    name: "Space after comment slashes"
+    regex: '(^ *//\w+)'
+    message: "There should be a space after `//`."
+    severity: warning
+
+  weak_self_in_escaping:
+    name: "Capture list ordering"
+    regex: '\{\s*\[\s*unowned\s+self'
+    message: "Prefer [weak self] over [unowned self] in escaping closures."
+    severity: warning
+
+  no_hardcoded_strings_in_localizable:
+    name: "Hardcoded user-facing string"
+    regex: 'Text\("[^"]+"\)'
+    message: "User-facing strings should be localized, not hardcoded in Text()."
+    severity: warning
+    match_kinds:
+      - string
+
+  redundant_main_actor:
+    name: "Redundant @MainActor"
+    regex: '@MainActor\s+@MainActor'
+    message: "Duplicate @MainActor annotation."
+    severity: error
+
+  # --- Observation framework (iOS 17+) over Combine's ObservableObject -------
+  # `included` scopes these to the SwiftUI view layer only, so the Combine-based
+  # service layer is never flagged. Adjust the directory names below to match
+  # your project (e.g. add Modules/*/Sources/Views, drop ones you don't use).
+  # A file must match this regex on its full path for the rule to run.
+  legacy_observable_object:
+    name: "Legacy ObservableObject"
+    regex: '\bObservableObject\b'
+    message: "Use the @Observable macro instead of conforming to ObservableObject."
+    severity: warning
+    included: '.*/(Views|Features|Screens|Presentation|Components|UI)/.*\.swift'
+
+  legacy_published:
+    name: "Legacy @Published"
+    regex: '@Published\b'
+    message: "@Published is unnecessary on @Observable types; tracked properties update automatically."
+    severity: warning
+    included: '.*/(Views|Features|Screens|Presentation|Components|UI)/.*\.swift'
+
+  legacy_state_object:
+    name: "Legacy @StateObject"
+    regex: '@StateObject\b'
+    message: "With @Observable, own the model with @State instead of @StateObject."
+    severity: warning
+    included: '.*/(Views|Features|Screens|Presentation|Components|UI)/.*\.swift'
+
+  legacy_observed_object:
+    name: "Legacy @ObservedObject"
+    regex: '@ObservedObject\b'
+    message: "Pass an @Observable model directly, or use @Bindable for two-way bindings."
+    severity: warning
+    included: '.*/(Views|Features|Screens|Presentation|Components|UI)/.*\.swift'
+
+  legacy_environment_object:
+    name: "Legacy @EnvironmentObject"
+    regex: '@EnvironmentObject\b'
+    message: "Use @Environment with an @Observable type instead of @EnvironmentObject."
+    severity: warning
+    included: '.*/(Views|Features|Screens|Presentation|Components|UI)/.*\.swift'
+
+  # --- Modern Swift / Foundation API (house style guide) ---------------------
+  legacy_gcd:
+    name: "Legacy GCD"
+    regex: '\bDispatchQueue\b'
+    message: "Use modern Swift concurrency (async/await, Task, actors) instead of DispatchQueue."
+    severity: warning
+
+  legacy_string_replacing:
+    name: "Legacy string replacement"
+    regex: '\.replacingOccurrences\(of:'
+    message: "Use the Swift-native replacing(_:with:) instead of replacingOccurrences(of:with:)."
+    severity: warning
+
+  legacy_path_append:
+    name: "Legacy URL path append"
+    regex: '\.appendingPathComponent\('
+    message: "Use the modern appending(path:) instead of appendingPathComponent(_:)."
+    severity: warning
+
+  c_style_string_format:
+    name: "C-style string format"
+    regex: '\bString\(format:'
+    message: "Use the FormatStyle API (e.g. value.formatted(.number.precision(...))) instead of String(format:)."
+    severity: warning
+
+  legacy_formatter_class:
+    name: "Legacy Formatter subclass"
+    regex: '\b(DateFormatter|NumberFormatter|MeasurementFormatter)\b'
+    message: "Use the modern FormatStyle API instead of legacy Formatter subclasses."
+    severity: warning
+
+  instantiated_button_style:
+    name: "Instantiated style struct"
+    regex: '\b[A-Z]\w*ButtonStyle\(\)'
+    message: "Prefer static member lookup (e.g. .borderedProminent) over instantiating the style struct."
+    severity: warning
+
+  # --- SwiftUI modifiers & APIs (house style guide) --------------------------
+  legacy_foreground_color:
+    name: "foregroundColor"
+    regex: '\.foregroundColor\('
+    message: "Use foregroundStyle() instead of foregroundColor()."
+    severity: warning
+
+  legacy_corner_radius:
+    name: "cornerRadius"
+    regex: '\.cornerRadius\('
+    message: "Use clipShape(.rect(cornerRadius:)) instead of cornerRadius()."
+    severity: warning
+
+  legacy_tab_item:
+    name: "tabItem"
+    regex: '\.tabItem\b'
+    message: "Use the Tab API instead of tabItem()."
+    severity: warning
+
+  legacy_navigation_view:
+    name: "NavigationView"
+    regex: '\bNavigationView\b'
+    message: "Use NavigationStack with navigationDestination(for:) instead of NavigationView."
+    severity: warning
+
+  legacy_task_sleep:
+    name: "Task.sleep(nanoseconds:)"
+    regex: '\.sleep\(nanoseconds:'
+    message: "Use Task.sleep(for:) instead of Task.sleep(nanoseconds:)."
+    severity: warning
+
+  uiscreen_main_bounds:
+    name: "UIScreen.main.bounds"
+    regex: 'UIScreen\.main\.bounds'
+    message: "Don't read available space from UIScreen.main.bounds; use a container/GeometryProxy or visualEffect."
+    severity: warning
+
+  legacy_uigraphics_renderer:
+    name: "UIGraphicsImageRenderer"
+    regex: '\bUIGraphicsImageRenderer\b'
+    message: "Prefer ImageRenderer over UIGraphicsImageRenderer for rendering SwiftUI views."
+    severity: warning
+
+  hardcoded_font_size:
+    name: "Hard-coded font size"
+    regex: '\.system\(size:'
+    message: "Avoid forcing font sizes; prefer Dynamic Type text styles."
+    severity: warning
+
+  discouraged_font_weight:
+    name: "fontWeight()"
+    regex: '\.fontWeight\('
+    message: "Avoid fontWeight() unless necessary; use bold() to make text bold."
+    severity: warning
+
+  discouraged_geometry_reader:
+    name: "GeometryReader"
+    regex: '\bGeometryReader\b'
+    message: "Prefer containerRelativeFrame() or visualEffect() over GeometryReader where they suffice."
+    severity: warning
+
+  discouraged_scrollview_reader:
+    name: "ScrollViewReader"
+    regex: '\bScrollViewReader\b'
+    message: "Use newer ScrollView APIs (ScrollPosition, defaultScrollAnchor) instead of ScrollViewReader."
+    severity: warning
+
+  legacy_scroll_indicators:
+    name: "showsIndicators"
+    regex: 'showsIndicators:'
+    message: "Use the .scrollIndicators(.hidden) modifier instead of showsIndicators: false."
+    severity: warning
+
+  foreach_enumerated_array:
+    name: "Array-wrapped enumerated ForEach"
+    regex: 'ForEach\(Array\(.+\.enumerated\(\)'
+    message: "Pass x.enumerated() to ForEach directly (with an element keypath id) instead of wrapping it in Array()."
+    severity: warning
+
+  discouraged_any_view:
+    name: "AnyView"
+    regex: '\bAnyView\b'
+    message: "Avoid AnyView unless absolutely required."
+    severity: warning
+
+  discouraged_tap_gesture:
+    name: "onTapGesture"
+    regex: '\.onTapGesture\b'
+    message: "Use a Button unless you need the tap's location or count; then onTapGesture is fine."
+    severity: warning
+
+  uikit_color_in_swiftui:
+    name: "UIKit color in SwiftUI"
+    regex: '\bUIColor\b'
+    message: "Avoid UIKit colors in SwiftUI; use SwiftUI Color instead."
+    severity: warning
+    included: '.*/(Views|Features|Screens|Presentation|Components|UI)/.*\.swift'
+
+  # --- SwiftData + CloudKit (only applies if CloudKit is configured) ---------
+  cloudkit_unique_attribute:
+    name: "@Attribute(.unique) with CloudKit"
+    regex: '@Attribute\(\.unique\)'
+    message: "@Attribute(.unique) is unsupported when SwiftData uses CloudKit. Remove this rule if you don't use CloudKit."
+    severity: warning
+
+  # --- Testing (house style guide) -------------------------------------------
+  prefer_swift_testing:
+    name: "Prefer Swift Testing"
+    regex: '\bimport XCTest\b'
+    message: "Use the Swift Testing framework instead of XCTest for unit tests (UI tests may still need XCTest)."
+    severity: warning
+    excluded: '.*/(UITests|UITest)/.*'
+
+# -----------------------------------------------------------------------------
+# Reporter — `github-actions-logging` annotates PRs inline on CI.
+# Locally, override with: swiftlint --reporter xcode
+# -----------------------------------------------------------------------------
+reporter: "github-actions-logging"
+
+# Treat all violations as warnings during a migration window, then flip off.
+# strict: true   # <- uncomment to fail CI on any warning
