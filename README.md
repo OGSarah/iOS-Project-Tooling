@@ -1,4 +1,4 @@
-# Scripts, SwiftLint, and other universal files
+# Scripts, SwiftLint configuration files, and other universal files
 
 | File | Purpose | Usage |
 |------|---------|-------|
