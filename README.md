@@ -6,3 +6,4 @@
 | `RunScript.sh` | SwiftLint script for Xcode Build Phases | Don't run it. Copy and paste into the shell inside Run Script in Build Phases |
 | `.swiftlint.yml` | Basic SwiftLint config for a new Xcode project | Drop into the project root |
 | `Agents.md` | Agents file for mostly SwiftUI (with some UIKit and Swift-only) Xcode projects | Include in the project |
+| `IDETemplateMacros.plist` | | File for the copyright header used in the project | Place it at `YourProject.xcodeproj/xcshareddata/IDETemplateMacros.plist` |
