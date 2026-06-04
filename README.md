@@ -6,3 +6,6 @@ Various Useful Scripts
 
 - ### Basic SwiftLint file for a new Xcode project:
   .swiftlint.yml
+
+- ### Agents.md file for mostly SwiftUI but some UIKit and Swift only Xcode projects
+  Agents.md
