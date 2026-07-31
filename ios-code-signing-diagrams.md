@@ -1,4 +1,4 @@
-# iOS Code Signing & Provisioning — Visual Guide
+# A Visual Guide to iOS Code Signing & Provisioning
 
 Code signing answers **who made this app**. Provisioning answers **what it may do and where it may run**.
 
