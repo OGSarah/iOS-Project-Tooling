@@ -16,7 +16,7 @@ A small, reusable toolkit I drop into new iOS projects to standardize setup and 
 
 | File | Purpose |
 |------|---------|
-| `docs/ios-code-signing-diagrams.md` | A visual guide to iOS code signing and provisioning, built from Mermaid diagrams. Covers certificates, App IDs, entitlements, provisioning profiles, automatic and manual signing, Enterprise in-house distribution, launch-time Team ID validation, and a troubleshooting decision tree |
+| `ios-code-signing-diagrams.md` | A visual guide to iOS code signing and provisioning, built from Mermaid diagrams. Covers certificates, App IDs, entitlements, provisioning profiles, automatic and manual signing, Enterprise in-house distribution, launch-time Team ID validation, and a troubleshooting decision tree |
 
 Reference docs render directly on GitHub. Mermaid diagrams are supported in Markdown files, so no build step is needed.
 
