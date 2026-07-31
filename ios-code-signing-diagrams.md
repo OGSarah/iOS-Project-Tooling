@@ -103,7 +103,7 @@ graph TD
 
 ## 4. App IDs and capabilities
 
-The App ID is where capabilities get switched on in the developer account — and the profile only allows the entitlements the App ID supports.
+The App ID is where capabilities get switched on in the developer account. The profile only allows the entitlements the App ID supports.
 
 ```mermaid
 graph LR
@@ -251,4 +251,8 @@ flowchart TD
 
 ---
 
-> **Source:** These diagrams are based on the article *Understanding code signing and provisioning in iOS* by tanaschita.com — <https://tanaschita.com/ios-code-signing-provisioning/?utm_source=substack&utm_medium=email>
+> **Source:** These diagrams are based on the article *Understanding code signing and provisioning in iOS* by tanaschita.com.
+> <https://tanaschita.com/ios-code-signing-provisioning>
+>
+> She did an excellent job of explaining how signing works but I wanted to make a visual representation of it.
+> She also has two great iOS books that I highly recommend: <https://tanaschita.com/books/>
