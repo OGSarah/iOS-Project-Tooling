@@ -371,4 +371,4 @@ flowchart TD
 >
 > The Enterprise (In-House) section and the launch-time validation notes are not from the article. Details on the Apple Developer Enterprise Program come from Apple's program page, <https://developer.apple.com/programs/enterprise/>
 >
-> Mandatory code signing, Team ID library validation, and in-house app verification follow Apple Platform Security, "App code signing process in iOS, iPadOS, tvOS, visionOS, and watchOS."
+> Mandatory code signing, Team ID library validation, and in-house app verification follow Apple Platform Security, "App code signing process in iOS, iPadOS, tvOS, visionOS, and watchOS.", <https://support.apple.com/guide/security/app-code-signing-process-sec7c917bf14/web>
